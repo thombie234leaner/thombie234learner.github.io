@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+  function calculate_tax(x){
+    if (x < 0) {
+      return 0;
+    }
+    if (x >= 0 && x<= 800){
+      return 0;
+    }
+    if (x > 800 && x<= 21000){
+      return 4*x/21;
+    }
+    if (x > 21000 && x<= 49500){
+      return 6*x/19 - 25*2000/19;
+    }
+    if (x > 49500){
+      return 8*x/17 - 25*7000/17;
+    }
+
+  }
+
+  function before_tax(x) {
+    if (x <= 800){
+      return x;
+    }
+    if (x>800 && x<=21000){
+      return x/0.84;
+    }
+    if (x>21000 && x<=49500){
+      return (x-2000)/0.76;
+    }
+    if (x>49500){
+      return (x-7000)/0.68;
+    }
+  }
+
+  function find_optimal(cur_plan, x_remain, t_remain){
+    // opt_plan = cur_plan.slice()
+    if (t_remain == 1 || x_remain <= 800) {
+      min_tax = calculate_tax(x_remain);
+      opt_plan = cur_plan.concat([[x_remain, min_tax]]);
+      return [min_tax, opt_plan]
+    }
+    var remain_plan = []
+    if (x_remain>800) {
+      ret = find_optimal(cur_plan.concat([[800, 0]]), x_remain-800, t_remain-1);
+      rest_tax = ret[0];
+      rest_opt = ret[1];
+      remain_plan.push([rest_tax, rest_opt]);
+    }
+    if (x_remain>21000) {
+      ret = find_optimal(cur_plan.concat([[21000,calculate_tax(21000)]]), x_remain-21000, t_remain-1);
+      rest_tax = ret[0];
+      rest_opt = ret[1];
+      remain_plan.push([calculate_tax(21000)+rest_tax, rest_opt]);
+    }
+    if (x_remain>49500) {
+      ret = find_optimal(cur_plan.concat([[49500,calculate_tax(49500)]]), x_remain-49500, t_remain-1);
+      rest_tax = ret[0];
+      rest_opt = ret[1];
+      remain_plan.push([calculate_tax(49500)+rest_tax, rest_opt]);
+      // console.log([calculate_tax(49500)+rest_tax]);
+      // console.log(rest_opt);
+    }
+    remain_sort = remain_plan.sort()
+    // console.log(remain_plan)
+    return remain_sort[0]
+  }
+  function creatTable(data){
+    //这个函数的参数可以是从后台传过来的也可以是从其他任何地方传过来的
+    //这里我假设这个data是一个长度为5的字符串数组 我要把他放在表格的一行里面，分成五列
+
+    var tableData="<tr>"
+
+    //动态增加5个td,并且把data数组的五个值赋给每个td
+    tableData += "<tr><th>税额</th><th>税前</th><th>税后</th></tr>"
+    for(var i=0;i<data.length;i++){
+      tableData+="<tr><th>"+data[i][1].toFixed(2)+"</th><th>"+before_tax(data[i][0]).toFixed(2)+"</th><th>"+data[i][0].toFixed(2)+ "</th></tr>"
+    }
+
+    tableData+="</tr>"
+
+    //现在tableData已经生成好了，把他赋值给上面的tbody
+    document.getElementById("tbody1").innerHTML = tableData
+  }
+
+  function calculate(){
+    var K = parseFloat(document.getElementById("ava").value);
+    var t = parseFloat(document.getElementById("t").value);
+    console.log(K);
+
+    var res = find_optimal([], K, t);
+    console.log(res);
+    document.getElementById("result").textContent = "总税额"+res[0].toFixed(2);
+    document.getElementById("result1").textContent = "关爱动物，人人有则；没有白嫖就没有伤害";
+    creatTable(res[1]);
+  }
+
+</script>
+
+<body>
+
+<h2>Tax Calculation</h2>
+
+
+<label for="ava">全额到手:</label>
+<input type="text" id="ava" name="ava"><br><br>
+<label for="t">期数:</label>
+<input type="text" id="t" name="t"><br><br>
+<button onclick="calculate()">计算</button>
+
+<p>计算结果:</p>
+<div "white-space":"pre">
+<p id="result"></p>
+<p id="result1"></p>
+</div>
+<table border="1">
+    <tbody id="tbody1">
+    </tbody>
+</table>
+</body>
+</html>
