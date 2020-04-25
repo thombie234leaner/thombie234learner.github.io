@@ -37,16 +37,16 @@
 
   function find_optimal(cur_plan, x_remain, t_remain, prev_lvl){
     // opt_plan = cur_plan.slice()
-    min_tax = calculate_tax(x_remain);
-    opt_plan = cur_plan.concat([[x_remain, min_tax]]);
+    var min_tax = calculate_tax(x_remain);
+    var opt_plan = cur_plan.concat([[x_remain, min_tax]]);
     if (t_remain == 1 || x_remain <= 800) {
       return [min_tax, opt_plan]
     }
     var remain_plan = []
-    
-    remain_plan.push([min_tax, opt_plan]);
+    var ret, rest_tax, rest_opt;
+    // remain_plan.push([min_tax, opt_plan]);
 
-    if (x_remain>800 && prev_lvl==0) {
+    if (x_remain>800 && prev_lvl<=0) {
       ret = find_optimal(cur_plan.concat([[800, 0]]), x_remain-800, t_remain-1, 0);
       rest_tax = ret[0];
       rest_opt = ret[1];
@@ -63,12 +63,19 @@
       rest_tax = ret[0];
       rest_opt = ret[1];
       remain_plan.push([calculate_tax(49500)+rest_tax, rest_opt]);
+
       // console.log([calculate_tax(49500)+rest_tax]);
       // console.log(rest_opt);
     }
   
-    remain_sort = remain_plan.sort()
-    // console.log(remain_plan)
+    remain_sort = remain_plan.sort(function(x, y){ return x[0] - y[0];})
+    if (remain_sort.length == 0){
+      // console.log('Empty');
+      // console.log(remain_plan);
+      remain_sort.push([min_tax, opt_plan])
+    }
+    // console.log(cur_plan, x_remain, t_remain, prev_lvl);
+    // console.log(remain_plan,remain_sort);
     return remain_sort[0]
   }
   function creatTable(data){
@@ -78,9 +85,9 @@
     var tableData="<tr>"
 
     //动态增加5个td,并且把data数组的五个值赋给每个td
-    tableData += "<tr><th>税额</th><th>税前</th><th>税后</th></tr>"
+    tableData += "<tr><th>序号</th><th>税额</th><th>税前</th><th>税后</th></tr>"
     for(var i=0;i<data.length;i++){
-      tableData+="<tr><th>"+data[i][1].toFixed(2)+"</th><th>"+before_tax(data[i][0]).toFixed(2)+"</th><th>"+data[i][0].toFixed(2)+ "</th></tr>"
+      tableData+="<tr><th>"+(i+1)+"</th><th>"+data[i][1].toFixed(2)+"</th><th>"+before_tax(data[i][0]).toFixed(2)+"</th><th>"+data[i][0].toFixed(2)+ "</th></tr>"
     }
 
     tableData+="</tr>"
@@ -96,7 +103,7 @@
 
     document.getElementById('txt').textContent = "计算中";
     var res = find_optimal([], K, t,0);
-    console.log(res);
+    // console.log(res);
     document.getElementById('txt').textContent = "计算结果";
     document.getElementById("result").textContent = "总税额"+res[0].toFixed(2);
     document.getElementById("result1").textContent = "关爱动物，人人有则；没有白嫖就没有伤害";
@@ -107,7 +114,7 @@
 
 <body>
 
-<h2>Tax Calculation</h2>
+<h2>Tax Calculation, Super Fast!!!</h2>
 
 
 <label for="ava">全额到手:</label>
