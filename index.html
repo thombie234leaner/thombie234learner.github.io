@@ -90,8 +90,10 @@
     var t = parseFloat(document.getElementById("t").value);
     console.log(K);
 
+    document.getElementById('txt').textContent = "计算中";
     var res = find_optimal([], K, t);
     console.log(res);
+    document.getElementById('txt').textContent = "计算结果";
     document.getElementById("result").textContent = "总税额"+res[0].toFixed(2);
     document.getElementById("result1").textContent = "关爱动物，人人有则；没有白嫖就没有伤害";
     creatTable(res[1]);
@@ -110,7 +112,7 @@
 <input type="text" id="t" name="t"><br><br>
 <button onclick="calculate()">计算</button>
 
-<p>计算结果:</p>
+<p id='txt'></p>
 <div "white-space":"pre">
 <p id="result"></p>
 <p id="result1"></p>
