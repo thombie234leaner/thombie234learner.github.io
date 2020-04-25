@@ -35,34 +35,38 @@
     }
   }
 
-  function find_optimal(cur_plan, x_remain, t_remain){
+  function find_optimal(cur_plan, x_remain, t_remain, prev_lvl){
     // opt_plan = cur_plan.slice()
+    min_tax = calculate_tax(x_remain);
+    opt_plan = cur_plan.concat([[x_remain, min_tax]]);
     if (t_remain == 1 || x_remain <= 800) {
-      min_tax = calculate_tax(x_remain);
-      opt_plan = cur_plan.concat([[x_remain, min_tax]]);
       return [min_tax, opt_plan]
     }
     var remain_plan = []
-    if (x_remain>800) {
-      ret = find_optimal(cur_plan.concat([[800, 0]]), x_remain-800, t_remain-1);
+    
+    remain_plan.push([min_tax, opt_plan]);
+
+    if (x_remain>800 && prev_lvl==0) {
+      ret = find_optimal(cur_plan.concat([[800, 0]]), x_remain-800, t_remain-1, 0);
       rest_tax = ret[0];
       rest_opt = ret[1];
       remain_plan.push([rest_tax, rest_opt]);
     }
-    if (x_remain>21000) {
-      ret = find_optimal(cur_plan.concat([[21000,calculate_tax(21000)]]), x_remain-21000, t_remain-1);
+    if (x_remain>21000 && prev_lvl<=1) {
+      ret = find_optimal(cur_plan.concat([[21000,calculate_tax(21000)]]), x_remain-21000, t_remain-1, 1);
       rest_tax = ret[0];
       rest_opt = ret[1];
       remain_plan.push([calculate_tax(21000)+rest_tax, rest_opt]);
     }
-    if (x_remain>49500) {
-      ret = find_optimal(cur_plan.concat([[49500,calculate_tax(49500)]]), x_remain-49500, t_remain-1);
+    if (x_remain>49500 && prev_lvl<=2) {
+      ret = find_optimal(cur_plan.concat([[49500,calculate_tax(49500)]]), x_remain-49500, t_remain-1,2);
       rest_tax = ret[0];
       rest_opt = ret[1];
       remain_plan.push([calculate_tax(49500)+rest_tax, rest_opt]);
       // console.log([calculate_tax(49500)+rest_tax]);
       // console.log(rest_opt);
     }
+  
     remain_sort = remain_plan.sort()
     // console.log(remain_plan)
     return remain_sort[0]
@@ -91,7 +95,7 @@
     console.log(K);
 
     document.getElementById('txt').textContent = "计算中";
-    var res = find_optimal([], K, t);
+    var res = find_optimal([], K, t,0);
     console.log(res);
     document.getElementById('txt').textContent = "计算结果";
     document.getElementById("result").textContent = "总税额"+res[0].toFixed(2);
