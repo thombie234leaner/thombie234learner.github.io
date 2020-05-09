@@ -101,12 +101,17 @@
     //这里我假设这个data是一个长度为5的字符串数组 我要把他放在表格的一行里面，分成五列
 
     var tableData="<tr>";
-
+    var all_after_tax = 0;
+    var all_tax = 0;
     //动态增加5个td,并且把data数组的五个值赋给每个td
     tableData += "<tr><th>序号</th><th>税后</th><th>公积金</th><th>社保</th><th>税额</th></tr>";
     for(var i=0;i<data.length;i++){
+      all_after_tax += data[i][0];
+      all_tax += data[i][3];
       tableData+="<tr><th>"+(i+1)+"</th><th>"+data[i][0].toFixed(2)+"</th><th>"+data[i][1].toFixed(2)+"</th><th>"+data[i][2].toFixed(2)+"</th><th>"+data[i][3].toFixed(2)+ "</th></tr>";
     }
+    tableData+="<tr><th>总计</th><th>"+all_after_tax.toFixed(2)+"</th><th>"+(12*data[0][1]).toFixed(2)+"</th><th>"+(12*data[0][2]).toFixed(2)+"</th><th>"+all_tax.toFixed(2)+ "</th></tr>";
+    tableData+="<tr><th>平均</th><th>"+(all_after_tax/12).toFixed(2)+"</th><th>"+data[0][1].toFixed(2)+"</th><th>"+data[0][2].toFixed(2)+"</th><th>"+(all_tax/12).toFixed(2)+ "</th></tr>";
 
     tableData+="</tr>";
 
