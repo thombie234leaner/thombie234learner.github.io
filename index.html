@@ -67,7 +67,7 @@
       // console.log([calculate_tax(49500)+rest_tax]);
       // console.log(rest_opt);
     }
-  
+
     remain_sort = remain_plan.sort(function(x, y){ return x[0] - y[0];})
     if (remain_sort.length == 0){
       // console.log('Empty');
@@ -93,7 +93,25 @@
     tableData+="</tr>"
 
     //现在tableData已经生成好了，把他赋值给上面的tbody
-    document.getElementById("tbody1").innerHTML = tableData
+    document.getElementById("tbody1").innerHTML = tableData;
+  }
+
+  function creatTable2(data){
+    //这个函数的参数可以是从后台传过来的也可以是从其他任何地方传过来的
+    //这里我假设这个data是一个长度为5的字符串数组 我要把他放在表格的一行里面，分成五列
+
+    var tableData="<tr>";
+
+    //动态增加5个td,并且把data数组的五个值赋给每个td
+    tableData += "<tr><th>序号</th><th>税后</th><th>公积金</th><th>社保</th><th>税额</th></tr>";
+    for(var i=0;i<data.length;i++){
+      tableData+="<tr><th>"+(i+1)+"</th><th>"+data[i][0].toFixed(2)+"</th><th>"+data[i][1].toFixed(2)+"</th><th>"+data[i][2].toFixed(2)+"</th><th>"+data[i][3].toFixed(2)+ "</th></tr>";
+    }
+
+    tableData+="</tr>";
+
+    //现在tableData已经生成好了，把他赋值给上面的tbody
+    document.getElementById("tbody2").innerHTML = tableData;
   }
 
   function calculate(){
@@ -108,6 +126,230 @@
     document.getElementById("result").textContent = "总税额"+res[0].toFixed(2);
     document.getElementById("result1").textContent = "关爱动物，人人有则；没有白嫖就没有伤害";
     creatTable(res[1]);
+  }
+
+  function set1(){
+    var cb = document.getElementById("znjy");
+    if (cb.checked==true){
+      document.getElementById("nc").value = 1;
+      document.getElementById("znkcall").checked = true;
+      document.getElementById("znkceach").checked = false;
+    } else {
+      document.getElementById("znkcall").checked = false;
+      document.getElementById("znkceach").checked = false;
+    }
+  }
+  function set11(){
+    var cb = document.getElementById("znkcall");
+    if (cb.checked==true){
+      document.getElementById("znkceach").checked = false;
+    }
+  }
+  function set12(){
+    var cb = document.getElementById("znkceach");
+    if (cb.checked==true){
+      document.getElementById("znkcall").checked = false;
+    }
+  }
+  function set2() {
+    var cb = document.getElementById("sylr");
+    if (cb.checked==true){
+      document.getElementById("lramt").value = 2000;
+    }
+  }
+  function set5() {
+    var cb = document.getElementById("zfzj");
+    if (cb.checked==true){
+      document.getElementById("1500").checked = true;
+      document.getElementById("1100").checked = false;
+      document.getElementById("800").checked = false;
+    } else {
+      document.getElementById("1500").checked = false;
+      document.getElementById("1100").checked = false;
+      document.getElementById("800").checked = false;
+
+    }
+  }
+  function set51() {
+    var cb = document.getElementById("1500");
+    if (cb.checked==true){
+      document.getElementById("1100").checked = false;
+      document.getElementById("800").checked = false;
+    }
+  }
+  function set52() {
+    var cb = document.getElementById("1100");
+    if (cb.checked==true){
+      document.getElementById("1500").checked = false;
+      document.getElementById("800").checked = false;
+    }
+  }
+  function set53() {
+    var cb = document.getElementById("800");
+    if (cb.checked==true){
+      document.getElementById("1100").checked = false;
+      document.getElementById("1500").checked = false;
+    }
+  }
+  function set6() {
+    var cb = document.getElementById("jxjy");
+    if (cb.checked==true){
+      document.getElementById("xl").checked = true;
+      document.getElementById("zyjn").checked = false;
+    } else {
+      document.getElementById("xl").checked = false;
+      document.getElementById("zyjn").checked = false;
+    }
+  }
+  function set61() {
+    var cb = document.getElementById("xl");
+    if (cb.checked==true){
+      document.getElementById("zyjn").checked = false;
+    }
+  }
+  function set62() {
+    var cb = document.getElementById("zyjn");
+    if (cb.checked==true){
+      document.getElementById("xl").checked = false;
+    }
+  }
+
+  function cal_znjy() {
+    if (!document.getElementById("znjy").checked) {
+      return 0;
+    }
+    var fee_each = 1000;
+    if (document.getElementById("znkceach").checked) {
+      fee_each = 500;
+    }
+    return parseFloat(document.getElementById("nc").value)*fee_each;
+  }
+
+  function cal_jxjy(mb, yb){
+    if (!document.getElementById('jxjy').checked){
+      return [mb, yb];
+    }
+    console.log([mb, yb]);
+    var mb_new = mb;
+    var yb_new = yb;
+    if (document.getElementById("xl").checked) {
+      mb_new += 400;
+    }
+    if (document.getElementById("zyjn").checked) {
+      yb_new += 3600;
+    }
+    console.log([mb_new, yb_new]);
+    return [mb_new, yb_new];
+  }
+
+  function cal_zfdk(){
+    if (document.getElementById('zfdk').checked) {
+      return 1000;
+    }
+    return 0;
+  }
+
+  function cal_zfzj(){
+    if (!document.getElementById('zfzj').checked) {
+      return 0;
+    }
+    if (document.getElementById('1500').checked) {
+      return 1500;
+    }
+    if (document.getElementById('1100').checked) {
+      return 1100;
+    }
+    if (document.getElementById('800').checked) {
+      return 800;
+    }
+  }
+
+  function cal_sylr(){
+    if (!document.getElementById('sylr').checked) {
+      return 0;
+    }
+    return parseFloat(document.getElementById('lramt').value);
+  }
+
+  function cal_dbyl(){
+    if (!document.getElementById('dbyl').checked) {
+      return 0;
+    }
+    return parseFloat(document.getElementById('dbamt').value);
+  }
+  function cal_sb(amt) {
+    if (amt >=24633) {
+      return 2586.6;
+    }
+    return amt * 0.105;
+  }
+  function cal_gjj(amt) {
+    if (amt >= 24629){
+      return 1724;
+    }
+    return amt * 0.07;
+  }
+
+  function cal_after_tax(cur_income, month_inc, year_base, month_base) {
+    var gjj = cal_gjj(month_inc);
+    var sb = cal_sb(month_inc);
+    var yns = month_inc - gjj - sb - month_base;
+
+    var tax_list = [[0,36000,0.03],[36000,144000,0.1],[144000,300000,0.2],[300000,420000,0.25],[420000,660000,0.3],[660000,960000,0.35],[960000,2**32,0.45]]
+    var i=0;
+    var cur_level = 0;
+    for (i=0;i<tax_list.length;i++) {
+      // console.log(i,tax_list[i][0],tax_list[i][1],cum_income - year_base);
+      if ((cur_income - year_base) > tax_list[i][0] && (cur_income - year_base) <= tax_list[i][1]){
+        cur_level = i;
+        break;
+      }
+    }
+    console.log([cur_level, cur_income, month_base, year_base, yns]);
+    // start calculating
+    var dup_cal = (cur_income - year_base - tax_list[cur_level][0]) * tax_list[cur_level][2];
+    var new_income = cur_income - year_base - tax_list[cur_level][0] + yns;
+    if (new_income < 0) {
+      return [month_inc - gjj - sb, gjj, sb, 0.00];
+    }
+    var month_tax = 0;
+    while (new_income > 0) {
+      var cur_level_yns = tax_list[cur_level][1] - tax_list[cur_level][0];
+      if (cur_level_yns > new_income) {
+        cur_level_yns = new_income;
+      }
+      month_tax += tax_list[cur_level][2] * cur_level_yns;
+      cur_level += 1;
+      new_income -= cur_level_yns;
+    }
+    month_tax -= dup_cal;
+    return [month_inc-gjj-sb-month_tax, gjj, sb, month_tax];
+  }
+
+  function calculate2() {
+    var year_base = 0;
+    var month_base = 5000;
+    month_base += cal_znjy();
+    var bases = cal_jxjy(month_base, year_base)
+    year_base = bases[1];
+    month_base = bases[0];
+    month_base += cal_zfdk();
+    month_base += cal_zfzj();
+    month_base += cal_sylr();
+    year_base += cal_dbyl();
+
+    var cum_income = 0;
+    var results = []
+    var month_inc = parseFloat(document.getElementById('bt').value);
+    var i;
+    for (i = 0; i < 12; i++) {
+      var res = cal_after_tax(cum_income, month_inc, year_base, month_base);
+      cum_income += month_inc - res[1] - res[2] - month_base;
+      results.push(res);
+    }
+    console.log(results);
+    creatTable2(results);
+    return results;
   }
 
 </script>
@@ -130,6 +372,24 @@
 </div>
 <table border="1">
     <tbody id="tbody1">
+    </tbody>
+</table>
+<p>------------------------------------------------</p>
+<p>社保税额计算</p>
+<label>税前月收入</label>
+<input type="text" id="bt"><br>
+<br>
+<label>专项扣除：</label><br>
+<input type="checkbox" id="znjy" onclick="set1()">子女教育：人数<input type="text" id="nc">父母分开扣除？<input type="checkbox" id="znkceach" onclick="set11()">是<input type="checkbox" id="znkcall" onclick="set12()">否<br>
+<input type="checkbox" id="sylr" onclick="set2()">赡养老人：每月扣除金额<input type="text" id="lramt"><br>
+<input type="checkbox" id="dbyl">大病医疗：当年扣除金额<input type="text" id="dbamt"><br>
+<input type="checkbox" id="zfdk">住房贷款<br>
+<input type="checkbox" id="zfzj" onclick="set5()">住房租金：<input type="checkbox" id="1500" onclick="set51()">1500<input type="checkbox" id="1100" onclick="set52()">1100<input type="checkbox" id="800" onclick="set53()">800<br>
+<input type="checkbox" id="jxjy" onclick="set6()">继续教育：<input type="checkbox" id="xl" onclick="set61()">学历学位继续教育<input type="checkbox" id="zyjn" onclick="set62()">职业技能继续教育<br>
+<br>
+<button onclick="calculate2()">计算</button>
+<table border="1">
+    <tbody id="tbody2">
     </tbody>
 </table>
 </body>
