@@ -289,10 +289,14 @@
     return amt * 0.105;
   }
   function cal_gjj(amt) {
-    if (amt >= 31014){
-      return 2170.98;
+    var rate = 0.07;
+    if (document.getElementById('moreGjj').checked) {
+      rate = 0.12;
     }
-    return amt * 0.07;
+    if (amt >= 31014){
+      return 31014 * rate;
+    }
+    return amt * rate;
   }
 
   function cal_after_tax(cur_income, month_inc, year_base, month_base) {
@@ -383,6 +387,7 @@
 <p>社保税额计算</p>
 <label>税前月收入</label>
 <input type="text" id="bt"><br>
+<input type="checkbox" id="moreGjj">补充公积金<br>
 <br>
 <label>专项扣除：</label><br>
 <input type="checkbox" id="znjy" onclick="set1()">子女教育：人数<input type="text" id="nc">父母分开扣除？<input type="checkbox" id="znkceach" onclick="set11()">是<input type="checkbox" id="znkcall" onclick="set12()">否<br>
