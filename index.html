@@ -159,7 +159,7 @@
   function set2() {
     var cb = document.getElementById("sylr");
     if (cb.checked==true){
-      document.getElementById("lramt").value = 2000;
+      document.getElementById("lramt").value = 3000;
     }
   }
   function set5() {
@@ -283,8 +283,8 @@
     return parseFloat(document.getElementById('dbamt').value);
   }
   function cal_sb(amt) {
-    if (amt >=31014) {
-      return 3256.47;
+    if (amt >=36549) {
+      return 3837.645;
     }
     return amt * 0.105;
   }
@@ -293,8 +293,8 @@
     if (document.getElementById('moreGjj').checked) {
       rate = 0.12;
     }
-    if (amt >= 31014){
-      return 31014 * rate;
+    if (amt >= 36549){
+      return 36549 * rate;
     }
     return amt * rate;
   }
